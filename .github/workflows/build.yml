@@ -1,0 +1,36 @@
+name: Build APK
+on:
+  push:
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 17
+      - uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: 8.9
+      - name: Build
+        id: b
+        run: |
+          set +e
+          gradle assembleDebug --no-daemon --stacktrace > build.log 2>&1
+          echo "code=$?" >> $GITHUB_OUTPUT
+      - name: Release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          N=${{ github.run_number }}
+          if [ "${{ steps.b.outputs.code }}" = "0" ]; then
+            gh release create "v$N" app/build/outputs/apk/debug/app-debug.apk --title "APK $N" --notes "OVA APP BUILDER"
+          else
+            { grep -n -E "error|FAILED|What went wrong|Could not|not found" -A3 build.log | head -60; echo ----; tail -n 25 build.log; } > notes.txt
+            gh release create "fail-$N" --prerelease --title "FAILED $N" --notes-file notes.txt
+            exit 1
+          fi

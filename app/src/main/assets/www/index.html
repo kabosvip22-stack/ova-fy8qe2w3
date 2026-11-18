@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#168cff">
+<title>مجال</title>
+<style>
+@keyframes ovaFade{from{opacity:0}to{opacity:1}}@keyframes ovaUp{from{opacity:0;transform:translateY(22px)}to{opacity:1;transform:translateY(0)}}@keyframes ovaPop{0%{opacity:0;transform:scale(.82)}100%{opacity:1;transform:scale(1)}}@keyframes ovaSlide{from{opacity:0;transform:translateX(24px)}to{opacity:1;transform:translateX(0)}}@keyframes ovaGlow{0%,100%{filter:drop-shadow(0 0 2px #168cff)}50%{filter:drop-shadow(0 0 10px #168cff)}}
+*{box-sizing:border-box}html,body{min-height:100%;margin:0}body{background:#050b18;color:#eaf6ff;font-family:system-ui,Tahoma,Arial,sans-serif;line-height:1.6}.ova-shell{width:100%;max-width:560px;min-height:100vh;margin:0 auto;padding:18px;background:#071426;box-shadow:0 0 28px #168cff22;border:1px solid #174a83}.ova-header{padding:8px 0 14px;margin-bottom:16px;border-bottom:1px solid #174a83;color:#168cff;font-size:19px;font-weight:800}.ova-page{display:block;min-height:20px}.ova-page[hidden]{display:none!important}.ova-page h2,.ova-page p,.ova-page div{overflow-wrap:anywhere}.ova-btn{border:0;border-radius:10px;padding:11px 18px;font:inherit;cursor:pointer}.ova-input{width:100%;max-width:100%;padding:11px;border:1px solid #174a83;border-radius:8px;font:inherit;background:#0b1730;color:#eaf6ff}.ova-nav{display:flex;justify-content:space-around;gap:6px;padding:10px;background:#e2f3ff;border-radius:10px}.ova-nav button{background:transparent;color:#0b1b2c;border:0;font:inherit;cursor:pointer}.ova-page img{display:block;max-width:100%;height:auto}.ova-page video{display:block;width:100%;max-width:100%;height:auto;background:#000}.ova-page button{cursor:pointer}.ova-page[hidden]{display:none!important}
+
+</style>
+</head>
+<body>
+<main class="ova-shell"><section class="ova-page" id="ova-page-1" ><h2 style="animation:;text-align:center;margin:8px 0;color:#eaf6ff;font-size:26px;font-weight:700;">مرحبًا بك 👋</h2>
+<div style="animation:;text-align:center;margin:8px 0;color:#91abc8;font-size:16px;;white-space:pre-line">ابدأ في بناء تطبيقك من هنا.</div>
+<div style="animation:;text-align:center;margin:8px 0;color:#ffffff;font-size:16px;"><button type="button" class="ova-btn" style="background:#168cff;color:#ffffff" data-action="alert" data-page="" data-target-page="" data-value="أهلًا بك!" data-sound="" data-sound-preset="none">ابدأ الآن</button></div></section></main>
+
+
+
+
+<script>(()=>{
+  const pages=Array.from(document.querySelectorAll('.ova-page'));
+  function show(id){const next=document.getElementById(id);if(!next||!next.classList.contains('ova-page'))return false;pages.forEach(x=>{x.hidden=true;x.style.display='none'});next.hidden=false;next.style.display='block';window.scrollTo({top:0,behavior:'auto'});return true}
+  pages.forEach((x,n)=>{x.hidden=n!==0;x.style.display=n===0?'block':'none'});
+  document.addEventListener('click',function(e){
+   const nav=e.target.closest('[data-nav-page]');
+   if(nav){e.preventDefault();const id=nav.getAttribute('data-nav-page');if(id)show(id);return;}
+   const b=e.target.closest('[data-action]');if(!b)return;
+   const a=b.getAttribute('data-action')||'none',v=b.getAttribute('data-value')||'';
+   if(b.dataset.sound){try{const snd=new Audio(b.dataset.sound);snd.volume=.85;snd.play().catch(()=>{});}catch(_){}}else if(b.dataset.soundPreset&&b.dataset.soundPreset!=='none'){try{const ctx=new (window.AudioContext||window.webkitAudioContext)(),o=ctx.createOscillator(),g=ctx.createGain(),preset=b.dataset.soundPreset;const freq=preset==='success'?880:preset==='pop'?520:preset==='click'?680:440;o.type=preset==='pop'?'triangle':'sine';o.frequency.value=freq;g.gain.setValueAtTime(.0001,ctx.currentTime);g.gain.exponentialRampToValueAtTime(.12,ctx.currentTime+.01);g.gain.exponentialRampToValueAtTime(.0001,ctx.currentTime+(preset==='success'?.22:.09));o.connect(g);g.connect(ctx.destination);o.start();o.stop(ctx.currentTime+.24);o.onended=()=>ctx.close();}catch(_){}}
+   if(a==='page'){e.preventDefault();const id=b.getAttribute('data-target-page')||b.getAttribute('data-page')||'';if(id){show(id);}else{console.warn('OVA: button has no valid target page');}}
+   else if(a==='url'&&v){window.open(v,'_blank','noopener,noreferrer');}
+   else if(a==='alert'){alert(v);}
+   else if(a==='back'){const current=pages.findIndex(x=>!x.hidden);if(current>0)show(pages[current-1].id);}
+   else if(a==='email'&&v){location.href='mailto:'+v;}
+   else if(a==='phone'&&v){location.href='tel:'+v;}
+  });
+  const splash=document.getElementById('ovaSplash'),start=document.getElementById('ovaStart'),sub=document.getElementById('ovaSubscribe');if(start)start.addEventListener('click',()=>{if(splash)splash.remove();if(sub)sub.style.display='flex';});else if(sub)sub.style.display='flex';const subBtn=document.getElementById('ovaSubBtn'),subStatus=document.getElementById('ovaSubStatus');if(subBtn)subBtn.addEventListener('click',()=>{const url="";if(url)window.open(url,'_blank','noopener');subBtn.disabled=true;subStatus.textContent='يرجى الانتظار 3 ثوانٍ...';setTimeout(()=>{subStatus.textContent='تم ✓';subBtn.textContent='تم';setTimeout(()=>{if(sub)sub.remove()},650)},3000)});
+  const mt=document.getElementById('ovaMusicToggle'),ma=document.getElementById('ovaMusic');
+  if(mt&&ma){ma.volume=0.45;ma.loop=true;mt.addEventListener('click',()=>{if(ma.paused){ma.play().then(()=>mt.textContent='⏸ إيقاف الموسيقى').catch(()=>alert('تعذر تشغيل الموسيقى'));}else{ma.pause();mt.textContent='🎵 تشغيل الموسيقى';}});}
+  window.ovaSearch=function(input){const q=String(input.value||'').toLocaleLowerCase();const active=document.querySelector('.ova-page:not([hidden])');if(!active)return;active.querySelectorAll('li,h2,.ova-card').forEach(el=>{el.style.display=el.textContent.toLocaleLowerCase().includes(q)?'':'none';});};
+ })();
+</script>
+<script>window.ovaBack=function(){var p=Array.from(document.querySelectorAll('.ova-page')),c=p.findIndex(function(x){return!x.hidden});if(c>0){p.forEach(function(x,n){x.hidden=n!==c-1;x.style.display=n===c-1?'block':'none'});return true}return false}</script></body></html>
